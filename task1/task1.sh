@@ -97,7 +97,7 @@ kill_process(){
     kill "$pid" 2>/dev/null
     #checks if command is successfully killed using the 0 (success) or 1 (fail) output from kill command
     if [ $? -eq 0 ]; then
-        echo "Process "$pid terminated successfully."
+        echo "Process $pid terminated successfully.""
         log_action "Process $pid was terminated succesfully"
     else
         echo "Failed to terminate process $pid"
@@ -105,4 +105,67 @@ kill_process(){
     fi
 
     return
+}
+
+#disk inspect performs all actions in relation to directorys and content and outputs key information about the desired directory
+Disk_Inspect(){
+    echo "Enter Directory for inspection:"
+    read dir
+
+    #checks to see if entered directory exists
+    if [ ! -d "$dir" ]; then
+        echo "Error: Directory not found."
+        log_action "Directory not found: $dir"
+        return
+    fi
+    log_action "User attempted to inspect directory: $dir"
+
+    #shows the size of the directory in a human readable format
+    du -sh "$dir"
+
+    large_logs=$(find "$dir" -type f -name "*.log" -size +50M)
+
+    if [ -z "$large_logs" ]; then
+        echo "No log files larger than 50MB found."
+        log_action "No large log files found in $dir"
+    else
+        echo "$large_logs"
+        log_action "large log files detected in $dir"
+    fi
+
+    if [ ! -d ArchiveLogs ]; then
+        mkdir ArchiveLogs
+        log_action "Directory ArchiveLogs created"
+    fi
+
+    echo "Do you wish to Archive Large Log Files? (Y/N)"
+    read confirm
+    #confirms if user wants to archive any large logs
+    if [ "$confirm" != "Y" ] && [ "$confirm" != "y" ]; then
+        log_action "User cancels archiving"
+        return
+    fi
+    log_action "User archived large log files"
+
+    #for loop to move compress large log files and move to the archive while maintaining a timestamp that concatenates on the file name
+    for file in $(find "$dir" - type f -name "*.log" -size +50M); do
+        timestamp=$(date +"%Y%m%d_%H%M%S")
+        gzip -c "$file" > "ArchiveLogs/$(basename "$file")_$timestamp.gz"
+        log_action "$file archived to ArchiveLogs"
+    done
+
+    #gets size of archive logs directory
+    archive_size=$(du -s ArchiveLogs | awk '{print $1}')
+
+    #based on conditions gives warning about size of directory
+    if [ "$archive_size" -gt 1000000 ]; then
+        echo "WARNING: Archivelogs directory exceeds 1GB"
+        log_action "ArchiveLogs exceeded 1GB (size: ${archive_size}KB)"
+    else
+        log_action "ArchiveLogs size OK (size: ${archive_size}KB"
+    fi
+    
+
+
+
 }
