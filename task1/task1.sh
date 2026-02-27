@@ -1,13 +1,5 @@
 #!/bin/sh
 
-#code below defines the logfile variable as the file system_monitor.log
-#it only makes a new file if it doesn't detect a file with the same filename in the directory that this code sits
-LOGFILE="system_monitor.log"
-if [ ! -f "$LOGFILE" ]; then
-    touch "$LOGFILE"
-    log_action "Log File created on script start"
-fi
-
 #the log action function allows for easy logs to be created with a timestamp and a custom message
 log_action(){
     #Checks for log file and either creates a new one or appends existing
@@ -17,6 +9,14 @@ log_action(){
 
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1" >> "$LOGFILE"
 }
+
+#code below defines the logfile variable as the file system_monitor.log
+#it only makes a new file if it doesn't detect a file with the same filename in the directory that this code sits
+LOGFILE="system_monitor.log"
+if [ ! -f "$LOGFILE" ]; then
+    touch "$LOGFILE"
+    log_action "Log File created on script start"
+fi
 
 #basic function that reads the current active log file in the directory of the code
 Read_Log(){
@@ -56,14 +56,14 @@ kill_process(){
     read confirm
 
     #first condition is to confirm user wants to kill process
-    if [ "$confirm != "Y" ] && [ "$confirm" != "y" ]; then
+    if [ "$confirm" != "Y" ] && [ "$confirm" != "y" ]; then
         echo "Termination Cancelled."
-        log_action "Termination of PID: %pid cancelled by user"
+        log_action "Termination of PID: $pid cancelled by user"
         return
     fi
 
-    #second condition is to check if the proces is actually the running script
-    if ["$pid" -eq "$$" ]; then
+    #second condition is to check if the process is actually the running script
+    if [ "$pid" -eq "$$" ]; then
         echo "Error: Cannot terminate Management System script itself"
         echo "Please use BYE command on Main Menu to terminate this program"
         log_action "KILL BLOCKED: PID $pid was script"
@@ -71,8 +71,8 @@ kill_process(){
     fi
 
     #third condition is to check that the process is not a kernel thread
-    KNT=$(ps -p "$pid" -o -comm=)
-    if [ "$KNT" == \[*] ]; then
+    KNT=$(ps -p "$pid" -o comm=)
+    if [[ "$KNT" =~ ^\[.*\]$ ]]; then
         echo "Error: Kernal Threads/Processes cannot be terminated"
         log_action "KILL BLOCKED: PID $pid was critical Kernel process/thread"
         return
@@ -97,7 +97,7 @@ kill_process(){
     kill "$pid" 2>/dev/null
     #checks if command is successfully killed using the 0 (success) or 1 (fail) output from kill command
     if [ $? -eq 0 ]; then
-        echo "Process $pid terminated successfully.""
+        echo "Process $pid terminated successfully."
         log_action "Process $pid was terminated succesfully"
     else
         echo "Failed to terminate process $pid"
@@ -148,7 +148,7 @@ Disk_Inspect(){
     log_action "User archived large log files"
 
     #for loop to move compress large log files and move to the archive while maintaining a timestamp that concatenates on the file name
-    for file in $(find "$dir" - type f -name "*.log" -size +50M); do
+    for file in $(find "$dir" -type f -name "*.log" -size +50M); do
         timestamp=$(date +"%Y%m%d_%H%M%S")
         gzip -c "$file" > "ArchiveLogs/$(basename "$file")_$timestamp.gz"
         log_action "$file archived to ArchiveLogs"
@@ -162,7 +162,7 @@ Disk_Inspect(){
         echo "WARNING: Archivelogs directory exceeds 1GB"
         log_action "ArchiveLogs exceeded 1GB (size: ${archive_size}KB)"
     else
-        log_action "ArchiveLogs size OK (size: ${archive_size}KB"
+        log_action "ArchiveLogs size OK (size: ${archive_size}KB)"
     fi
 
 }

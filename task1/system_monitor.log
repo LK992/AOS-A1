@@ -1,0 +1,18 @@
+2026-02-27 16:58:32 - User exited script via Bye command
+2026-02-27 17:00:10 - User Selected: Display CPU/MEM
+2026-02-27 17:00:10 - Displayed CPU and Memory Usage
+2026-02-27 17:00:19 - User Selected: Disk Inspection
+2026-02-27 17:00:23 - Directory not found: task1
+2026-02-27 17:00:33 - User Selected: Disk Inspection
+2026-02-27 17:00:41 - Directory not found: AOS-A1/task1
+2026-02-27 17:02:01 - User Selected: Disk Inspection
+2026-02-27 17:02:18 - User attempted to inspect directory: /mnt/c/Users/ALIENWARE/AOS-A1/task1
+2026-02-27 17:02:18 - No large log files found in /mnt/c/Users/ALIENWARE/AOS-A1/task1
+2026-02-27 17:02:18 - Directory ArchiveLogs created
+2026-02-27 17:02:25 - User cancels archiving
+2026-02-27 17:02:39 - User Selected: View Log File
+2026-02-27 17:02:39 - User Viewed the log file
+2026-02-27 17:02:56 - User Selected: Terminate Process
+2026-02-27 17:02:57 - User attempted to terminate PID 116
+2026-02-27 17:03:01 - Process 116 failed to terminate due to kill command protection
+2026-02-27 17:03:51 - User exited script via Bye command
