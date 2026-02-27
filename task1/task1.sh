@@ -46,3 +46,63 @@ Display_CPUMEM(){
     log_action "Displayed CPU and Memory Usage"
 }
 
+kill_process(){
+    echo "Enter PID of process you wish to terminate"
+    read pid
+
+    log_action "User attempted to terminate PID $pid"
+
+    echo "Are you sure you want to terminate PID: $pid (Y/N) "
+    read confirm
+
+    #first condition is to confirm user wants to kill process
+    if [ "$confirm != "Y" ] && [ "$confirm" != "y" ]; then
+        echo "Termination Cancelled."
+        log_action "Termination of PID: %pid cancelled by user"
+        return
+    fi
+
+    #second condition is to check if the proces is actually the running script
+    if ["$pid" -eq "$$" ]; then
+        echo "Error: Cannot terminate Management System script itself"
+        echo "Please use BYE command on Main Menu to terminate this program"
+        log_action "KILL BLOCKED: PID $pid was script"
+        return
+    fi
+
+    #third condition is to check that the process is not a kernel thread
+    KNT=$(ps -p "$pid" -o -comm=)
+    if [ "$KNT" == \[*] ]; then
+        echo "Error: Kernal Threads/Processes cannot be terminated"
+        log_action "KILL BLOCKED: PID $pid was critical Kernel process/thread"
+        return
+    fi
+
+    #fourth condition is to ensure PID isnt 1 as this is a system process that will cause a crash
+    if [ "$pid" -eq 1 ]; then
+        echo "Error: PID 1 is a critical system process that cannot be terminated"
+        log_action "KILL_BLOCKED: PID $pid is critical system process and cannot be terminated without crashing system"
+        return
+    fi
+
+    #fifth condition checks if the process is for the shell in which the code is running
+    shell_pid=$(ps -p $$ -o ppid=)
+    if [ "$pid" -eq "$shell_pid" ]; then
+        echo "Error: Cannot terminate shell."
+        log_action "KILL_BLOCKED: cannot terminate shell"
+        return
+    fi
+
+    #finally kills command
+    kill "$pid" 2>/dev/null
+    #checks if command is successfully killed using the 0 (success) or 1 (fail) output from kill command
+    if [ $? -eq 0 ]; then
+        echo "Process "$pid terminated successfully."
+        log_action "Process $pid was terminated succesfully"
+    else
+        echo "Failed to terminate process $pid"
+        log_action "Process $pid failed to terminate due to kill command protection"
+    fi
+
+    return
+}
