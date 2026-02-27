@@ -81,7 +81,8 @@ Submit_Job(){
 
 #function to simulate priority scheduling based on the jobs inside pending_jobs.txt
 Process_Queue(){
-    scheduled_jobs=$(tail -n +2 pending_jobs.txt | sort -t '|' -k4 -n) #sorts job by priority, -k4 is looking at column 4 for priority which is where the sort function works
+    scheduled_jobs_file=$(mktemp) #creates a temporary file to store the sorted jobs
+    tail -n +2 pending_jobs.txt | sort -t '|' -k4 -n > "$scheduled_jobs_file" #sorts job by priority, -k4 is looking at column 4 for priority which is where the sort function works
 
     echo "Executing jobs by priority..."
     echo "------------------------------"
@@ -114,7 +115,11 @@ Process_Queue(){
 
         log_action "Job: $S_id $name $priority executed using Priority Scheduling"
 
-    done < <(printf "%s\n" "$scheduled_jobs") #converts sorted job list intoa line by line stream for the while loop
+    done < "$scheduled_jobs_file" #feeds the sorted job list into the while loop
+    #removes the temporary file used to store the sorted jobs
+    rm "$scheduled_jobs_file"
+
+    #<(printf "%s\n" "$scheduled_jobs") converts sorted job list intoa line by line stream for the while loop
     #a problem arose here originally the while had code < pending_jobs.txt however that broke due to the code changing the file previously,
     #this then led to the ccode reading the old file description and not moving the files correctly over to completed_jobs because the loop exits early
     #for the next job in the sequence, this printf line fixed all them problems.

@@ -1,0 +1,11 @@
+S_id|name|estim_time|priority
+1001|CompileReport|3|2
+1002|DataBackup|5|1
+1003|ImageProcessing|2|3
+1004|NetworkScan|4|2
+1005|EmailBatch|1|1
+1006|DatabaseCleanup|6|4
+1007|VideoEncoding|3|3
+1008|LogRotation|2|2
+1009|SecurityAudit|4|1
+1010|FileCompression|3|4

@@ -1,0 +1,28 @@
+Log file created on script start
+2026-02-27 18:54:38 - User viewed pending jobs
+2026-02-27 18:55:49 - User viewed pending jobs
+2026-02-27 18:56:35 - Job \'CompilePythonScript\' submitted by student ID: 1011
+2026-02-27 18:57:38 - Job \'WaitTenSeconds\' submitted by student ID: 1012
+2026-02-27 18:58:01 - Job: 1002 DataBackup 1
+ executed using Priority Scheduling
+2026-02-27 18:58:02 - Job: 1005 EmailBatch 1
+ executed using Priority Scheduling
+2026-02-27 18:58:06 - Job: 1009 SecurityAudit 1
+ executed using Priority Scheduling
+2026-02-27 18:58:09 - Job: 1001 CompileReport 2
+ executed using Priority Scheduling
+2026-02-27 18:58:13 - Job: 1004 NetworkScan 2
+ executed using Priority Scheduling
+2026-02-27 18:58:15 - Job: 1008 LogRotation 2
+ executed using Priority Scheduling
+2026-02-27 18:58:17 - Job: 1003 ImageProcessing 3
+ executed using Priority Scheduling
+2026-02-27 18:58:20 - Job: 1007 VideoEncoding 3
+ executed using Priority Scheduling
+2026-02-27 18:58:26 - Job: 1006 DatabaseCleanup 4
+ executed using Priority Scheduling
+2026-02-27 18:58:29 - Job: 1010 FileCompression 4
+ executed using Priority Scheduling
+2026-02-27 18:58:39 - Job: 1012 WaitTenSeconds 5 executed using Priority Scheduling
+2026-02-27 18:58:45 - Job: 1011 CompilePythonScript 10
+ executed using Priority Scheduling
