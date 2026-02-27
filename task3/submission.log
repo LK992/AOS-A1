@@ -3,3 +3,11 @@
 2026-02-27 19:58:35 - invalid username input attempt: Student1
 2026-02-27 20:05:56 - Student Student1 successfully logged in
 2026-02-27 20:06:11 - Submission failed: file not found (1)
+2026-02-27 20:19:37 - Student Student1 successfully logged in
+2026-02-27 20:19:49 - Submission successful: file1.pdf
+2026-02-27 20:20:35 - Submission rejected (file too large): toolarge.docx
+2026-02-27 20:20:45 - Submission successful: file3.pdf
+2026-02-27 20:21:09 - Submission rejected (duplicate content): duplicate_content.pdf
+2026-02-27 20:21:21 - Submission rejected (duplicate filename): duplicate_content2.docx
+2026-02-27 20:23:22 - Student Student1 successfully logged in
+2026-02-27 20:23:30 - Submission rejected (duplicate filename): file3.pdf
