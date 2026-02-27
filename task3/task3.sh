@@ -193,3 +193,120 @@ main_menu(){
         echo ""
     done
 }
+
+#login function simulates logging into the system as a student and performs checks and locks accounts based on too many entries
+log_in(){
+    #variable used to allow entry into system
+    valid=0
+
+    echo "Welcome to CCCU submission portal"
+
+    #while loop continually runs until valid becomes 1
+    while [ $valid -eq 0 ]
+    do
+        echo "Enter Username"
+        read name
+
+        echo "Enter Password"
+        read -s pword
+
+        #captures current time for use with the warning for repeated log ins within 60 seconds
+        CURRENT_TIME=$(date +%s)
+
+        # checks to see if username matches the a username within valid_users_file
+        if ! grep -q "^${naame}$" "$valid_users_file"; then
+            log_action "invalid username input attempt: $name"
+            echo "Invalid username"
+            continue
+        fi
+
+        #checks if account is locked first to stop log in on locked accounts
+        if grep -q "^${name}$" "$locked_accounts_file" 2>/dev/null; then
+            log_action "Locked account loging attempt: $name"
+            echo "Account is locked"
+            continue
+        fi
+
+        # Detect Repeated Attempts within 60 seconds
+        #using awk to go through log files and capture when a log contains failed for the username and then takes the timestamp
+        RECENT_ATTEMPTS=$(awk -v user="$name" -v now="$CURRENT_TIME" '
+        {
+            # Check if log contains username and failed login message using regex with ~ operator
+            if ($0 ~ user && $0 ~ "failed") {
+                
+                #Reconstructs timestamp from log format.
+                log_time_str = $1 " " $2
+                
+                #converts human readable time into unix timestamp for calculations
+                cmd="date -d \"" logtime_str "\" +%s"
+                #tells awk to execute the command and store result in logtime
+                cmd | getline log_time
+                #closes command to ensure there arent too many open processes
+                close(cmd)
+                
+                #finally does comparison by checking if difference between unix timestamps are below 60
+                if ((now - log_time) <= 60)
+                    count++ # increments count
+                fi
+            }
+        }
+        END { print count } #prints count to recent_attempts which is used for comparison
+        ' "$LOGFILE" 2>/dev/null) #tells code where to look for log file and suppresess errors for clean outputs
+
+        #checks to see if recent_attempts is empty, if not checks if number is greater than 0
+        if [ -n "$RECENT_ATTEMPTS" ] && [ "$RECENT_ATTEMPTS" -gt 0 ]; then
+            #logs warning into the log file
+            log_action "Repeated login attempt within 60 seconds for $name"
+        fi
+
+
+        # Password Validation using index of passwords in the passwords.list file
+        # using grep captures line numbers for th entered username in valid users file
+        LINE_NUM=$(grep -n "^${name}$" "$valid_users_file" | cut -d: -f1)
+
+        #uses line number to find associated password
+        STORED_PASS=$(sed -n "${LINE_NUM}p" "passwords.list" 2>/dev/null)
+
+        #checks if passwords match
+        if [ "$pword" = "$STORED_PASS" ]; then
+            #changes valid to 1 and logs action before breaking loop
+            valid=1
+            log_action "Student $name successfully logged in"
+
+            break
+        
+        else
+
+            #otherwise logs a failed attempt
+            log_action "log in attempt failed with credentials $name"
+
+            #counts the amount of failures from the log file using grep -c and string matching from the logs
+            FAIL_COUNT=$(grep -c "log in attempt failed with credentials $name" "$LOGFILE")
+
+            #checks how many failed logs there are
+            if [ "$FAIL_COUNT" -ge 3 ]; then
+                #if equal or greater than 3 then the account is moved to the locked accounts file
+                echo "$name" >> "$locked_accounts_file"
+                #a log is created
+                log_action "Account locked after 3 failed attempts: $name"
+                #tells user the account if locked
+                echo "Account locked"
+            else
+                #shows user message for a failed entry into system
+                echo "Incorrect credentials try again"
+            fi
+
+        fi
+
+        echo ""
+        echo ""
+    done
+
+    #if all checks are passed and while is broken then notify user and then call main_menu function
+    echo "Logging you in..."
+    sleep 2
+    main_menu
+}
+
+#call to log in function to start program
+log_in
