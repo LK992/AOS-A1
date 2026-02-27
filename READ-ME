@@ -1,1 +1,7 @@
-This file will show how to run the code
+In this repository there are three bash scripts and one python script.
+
+To run the bash you can use WSL (Windows Linux Subsystem) and it should work perfectly if file order stays the same.
+
+to run the python ensure that terminal is in the task3-python directory in the workspace and then run the program otherwise log in will continually fail and error
+
+

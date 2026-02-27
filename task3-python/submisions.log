@@ -14,3 +14,5 @@
 2026-02-24 14:29:34 Login attempt on locked account: Student1
 2026-02-24 14:38:05 Login Successful: Student1
 2026-02-24 14:39:04 Submission successful: file1.pdf
+2026-02-27 20:28:40 Login Successful: Student1
+2026-02-27 20:30:30 Submission rejected (file too large): too_large.pdf
