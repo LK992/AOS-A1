@@ -150,3 +150,46 @@ submit_assignment(){
 
     return 0
 }
+
+#main_menu function simply produces a menu with the required case statement that allows for easy selection
+main_menu(){
+    while true
+    do
+        echo "--------------------------------------"
+        echo "Main Menu"
+        echo ""
+        echo "1. Submit Assignment"
+        echo "2. Check Submission"
+        echo "3. List All submissions"
+        echo "4. Bye"
+        echo "--------------------------------------"
+        read choice
+        case $choice in
+            1)
+                submit_assignment
+                ;;
+            2)
+                check_submitted
+                ;;
+            3)
+                list_submissions
+                ;;
+
+            4|bye|Bye|BYE)
+                echo "Are you sure you want to exit (Y/N)"
+                read confirm
+
+                if [ "$confirm" = "Y" ] || [ "$confirm" = "y" ]; then
+                    echo "Bye"
+                    exit
+                fi
+                ;;
+            *)
+                echo "Invalid Choice"
+                ;;
+        
+        esac
+
+        echo ""
+    done
+}
