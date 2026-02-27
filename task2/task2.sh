@@ -133,3 +133,47 @@ View_Comp_Jobs(){
         echo "-----------------------------"
     done
 }
+
+#a basic while loop menu system which allows for easy navigation using a case statement
+# and confirms if user wants to exit the system.
+while true
+do
+    echo "--------------------------------------------------------"
+    echo "Main Menu"
+    echo ""
+    echo "1. View Pending Jobs"
+    echo "2. Submit Job Request"
+    echo "3. Process Jobs Queue"
+    echo "4. View Completed Jobs"
+    echo "5. Bye"
+    echo "--------------------------------------------------------"
+    read choice
+    #case statement handles invalid inputs and confirming if user wants to exit
+    case $choice in
+        1)
+            View_Pend_Jobs
+            ;;
+        2)
+            Submit_Job
+            ;;
+        3)
+            Process_Queue
+            ;;
+        4)
+            View_Comp_Jobs
+            ;;
+        5|bye|Bye|BYE)
+            echo "Are you sure you want to exit (Y/N)"
+            read confirm
+            if [ "$confirm" = "Y" ] || [ "$confirm" = "y" ]; then
+                echo "Bye"
+                exit
+            fi
+            ;;
+        *)
+            echo "Invalid Choice"
+            ;;
+    esac
+
+    echo ""
+done
