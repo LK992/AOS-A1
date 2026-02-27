@@ -164,8 +164,56 @@ Disk_Inspect(){
     else
         log_action "ArchiveLogs size OK (size: ${archive_size}KB"
     fi
-    
-
-
 
 }
+
+while true
+do
+    echo "--------------------------------------------------------"
+    echo "Main Menu"
+    echo ""
+    echo ""
+    echo "1. Display top ten processes by CPU and Memory usage"
+    echo "2. Inspect a directory and archive"
+    echo "3. Terminate a process"
+    echo "4. Check logs"
+    echo "5. Bye"
+    echo "--------------------------------------------------------"
+    read choice
+    #case statement to determine choice and to control incorrect/invalid inputs
+    case $choice in
+        1)
+            log_action "User Selected: Display CPU/MEM"
+            Display_CPUMEM
+            ;;
+        2)
+            log_action "User Selected: Disk Inspection"
+            Disk_Inspect
+            ;;
+        3)
+            log_action "User Selected: Terminate Process"
+            kill_process
+            ;;
+        4)
+            log_action "User Selected: View Log File"
+            Read_Log
+            ;;
+        5|bye|Bye|BYE)
+            echo "Are you sure you want to exit (Y/N)"
+            read confirm
+            #confirmation of closing program
+            if [ "$confirm" = "Y" ] || [ "$confirm" = "y" ]; then
+                log_action "User exited script via Bye command"
+                echo "Bye"
+                exit
+            else
+                log_action "User Cancelled exit"
+            fi
+            ;;
+        *)
+            echo "Invalid Choice"
+            log_action "Invalid menu choice: $choice"
+            ;;
+    esac
+done
+
