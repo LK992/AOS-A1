@@ -119,5 +119,17 @@ Process_Queue(){
     #this then led to the ccode reading the old file description and not moving the files correctly over to completed_jobs because the loop exits early
     #for the next job in the sequence, this printf line fixed all them problems.
     echo "All jobs completed."
-    
+
+}
+
+#basic function that outputs all completed jobs within completed_jobs.txt, ignoring the header.
+View_Comp_Jobs(){
+    tail -n +2 completed_jobs.txt | while IFS='|' read -r S_id name estim_time priority
+    do
+        echo "ID: $S_id"
+        echo "Name: $name"
+        echo "Time: $estim_time"
+        echo "Priority: $priority"
+        echo "-----------------------------"
+    done
 }
