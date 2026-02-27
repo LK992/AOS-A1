@@ -1,0 +1,16 @@
+2026-02-24 12:28:44 Login Successful: Student1
+2026-02-24 14:26:40 Login Successful: Student1
+2026-02-24 14:27:04 Submission rejected (duplicate cotent): duplicate_content.pdf
+2026-02-24 14:27:27 Submission rejected (file too large): too_large.pdf
+2026-02-24 14:27:43 Submission rejected (duplicate filename): file4.pdf
+2026-02-24 14:27:55 Submission successful: file1.pdf
+2026-02-24 14:29:11 Failed login attempt: Student1
+2026-02-24 14:29:16 Repeated login attempt within 60 seconds: Student1
+2026-02-24 14:29:16 Failed login attempt: Student1
+2026-02-24 14:29:19 Repeated login attempt within 60 seconds: Student1
+2026-02-24 14:29:19 Failed login attempt: Student1
+2026-02-24 14:29:19 Account locked: Student1
+2026-02-24 14:29:26 Login attempt on locked account: Student1
+2026-02-24 14:29:34 Login attempt on locked account: Student1
+2026-02-24 14:38:05 Login Successful: Student1
+2026-02-24 14:39:04 Submission successful: file1.pdf
