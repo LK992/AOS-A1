@@ -208,13 +208,13 @@ log_in(){
         read name
 
         echo "Enter Password"
-        read -s pword
+        read pword
 
         #captures current time for use with the warning for repeated log ins within 60 seconds
         CURRENT_TIME=$(date +%s)
 
         # checks to see if username matches the a username within valid_users_file
-        if ! grep -q "^${naame}$" "$valid_users_file"; then
+        if ! grep -q "^${name}$" "$valid_users_file"; then
             log_action "invalid username input attempt: $name"
             echo "Invalid username"
             continue
