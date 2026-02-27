@@ -77,4 +77,47 @@ Submit_Job(){
     log_action "Job \'$job_name\' submitted by student ID: $student_id"
     echo "Job added successfully"
 
-}    
+}
+
+#function to simulate priority scheduling based on the jobs inside pending_jobs.txt
+Process_Queue(){
+    scheduled_jobs=$(tail -n +2 pending_jobs.txt | sort -t '|' -k4 -n) #sorts job by priority, -k4 is looking at column 4 for priority which is where the sort function works
+
+    echo "Executing jobs by priority..."
+    echo "------------------------------"
+
+    #while loop for "running" jobs reading all job information
+    while IFS='|' read -r S_id name estim_time priority
+    do
+        #outputs "currently running job"
+        echo "Running job: $name for Student: $S_id"
+        echo "Priority: $priority"
+        echo "Estimated time: $estim_time"
+        echo "------------------------------"
+        sleep "$estim_time" #sleeps for the estimated time to simulate the job running
+
+        #copies job to completed jobs.txt
+        echo "$S_id|$name|$estim_time|$priority" >> completed_jobs.txt
+        #assigns job and information into line variable
+        line="$S_id|$name|$estim_time|$priority"
+
+        #this command block, moves all existing not run jobs into a file called temp.txt and recreates the header
+
+        {
+            echo "S_id|name|estim_time|priority"
+
+            tail -n +2 pending_jobs.txt | grep -v -F "$line" #header is recreated because we skip the header from being read in pending_jobs.txt here
+
+        } > temp.txt #this temp.txt now has all jobs except the one just processed with the header
+
+        mv temp.txt pending_jobs.txt #now pending_jobs gets overwritten with the informaiton from temp.txt
+
+        log_action "Job: $S_id $name $priority executed using Priority Scheduling"
+
+    done < <(printf "%s\n" "$scheduled_jobs") #converts sorted job list intoa line by line stream for the while loop
+    #a problem arose here originally the while had code < pending_jobs.txt however that broke due to the code changing the file previously,
+    #this then led to the ccode reading the old file description and not moving the files correctly over to completed_jobs because the loop exits early
+    #for the next job in the sequence, this printf line fixed all them problems.
+    echo "All jobs completed."
+    
+}
