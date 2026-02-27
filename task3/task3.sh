@@ -46,3 +46,22 @@ check_submitted(){
         return 1
     fi
 }
+
+#function to list all submissions within the submitted directory with their submitted timestamp
+list_submissions(){
+
+    SUBMITTED="submissions/submitted"
+
+    echo "Submitted Assignments:"
+    echo "----------------------"
+
+    #for loop that removes unnecessary information and outputs file name and submission date
+    for file in "$SUBMITTED"/*
+    do
+        [ -f "$file" ] || continue
+        filename=$(basename "$file")
+        date=$(ls -l "$file" | awk '{print $6, $7, $8}')
+        echo "$filename - Submitted on: $date"
+    done
+
+}
